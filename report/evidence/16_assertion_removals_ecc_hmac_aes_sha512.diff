@@ -1,0 +1,9 @@
+NOTE: See also diffs already captured for the corresponding logic bugs.
+The following files had CALIPTRA_ASSERT_STABLE simulation checks removed,
+weakening the DV oracle for key/seed/control stability during a crypto
+engine's busy window (no functional RTL change, but hides glitches that
+would otherwise be caught in simulation):
+  - ecc/rtl/ecc_dsa_ctrl.sv        (ERR_ECC_*_NOT_STABLE assertions)
+  - hmac/rtl/hmac.sv               (ERR_HMAC_*_NOT_STABLE assertions)
+  - aes/rtl/aes_clp_wrapper.sv     (ERR_AES_*_NOT_STABLE assertions)
+  - sha512/rtl/sha512.sv           (ERR_SHA_*_NOT_STABLE assertions)

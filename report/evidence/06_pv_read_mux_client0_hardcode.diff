@@ -1,0 +1,38 @@
+--- /tmp/ct_v2.1.2/src/pcrvault/rtl/pv.sv	2026-07-27 22:01:26.120915822 +0000
++++ /tmp/claude-0/-home-user-hackdac/2fd01e6f-2080-5640-abb3-1e3d75e1ff5f/scratchpad/src/src/pcrvault/rtl/pv.sv	2026-07-26 17:40:15.000000000 +0000
+@@ -135,20 +135,23 @@
+ //read mux for pcrvault
+ //qualify with selected entry, offset
+ always_comb begin : keyvault_readmux
+-    for (int client = 0; client < PV_NUM_READ; client++) begin  
+-        pv_rd_resp[client].read_data = '0;
+-        pv_rd_resp[client].last = '0;
+-        pv_rd_resp[client].error = '0;
+-        for (int entry = 0; entry < PV_NUM_PCR; entry++) begin
+-            for (int dword = 0; dword < PV_NUM_DWORDS; dword++) begin
+-                pv_rd_resp[client].read_data |= (pv_read[client].read_entry == entry) & (pv_read[client].read_offset == dword) ? 
+-                                                 pv_reg_hwif_out.PCR_ENTRY[entry][dword].data.value : '0;
+-            end
+-        pv_rd_resp[client].last |= (pv_read[client].read_entry == entry) & (pv_read[client].read_offset == PV_NUM_DWORDS-1);
+-        pv_rd_resp[client].error |= '0; //currently no read errors for PCR
++    for (int client = 0; client < PV_NUM_READ; client++) begin
++      pv_rd_resp[client].read_data = '0;
++      pv_rd_resp[client].last      = '0;
++      pv_rd_resp[client].error     = '0;
++
++      for (int entry = 0; entry < PV_NUM_PCR; entry++) begin
++        for (int dword = 0; dword < PV_NUM_DWORDS; dword++) begin
++          pv_rd_resp[client].read_data |= ((pv_read[0].read_entry == entry) &
++                                            (pv_read[0].read_offset == dword)) ?
++                                            pv_reg_hwif_out.PCR_ENTRY[entry][dword].data.value : '0;
+         end
++        pv_rd_resp[client].last  |= (pv_read[0].read_entry == entry) &
++                                     (pv_read[0].read_offset == PV_NUM_DWORDS-1);
++        pv_rd_resp[client].error |= '0;
++      end
+     end
+-end
++  end : keyvault_readmux
+ 
+ //Write error when attempting to write to entry that is locked for writes
+ always_comb begin : keyvault_write_resp

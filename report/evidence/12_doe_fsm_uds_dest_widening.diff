@@ -1,0 +1,20 @@
+--- /tmp/ct_v2.1.2/src/doe/rtl/doe_fsm.sv	2026-07-27 22:01:25.784683165 +0000
++++ /tmp/claude-0/-home-user-hackdac/2fd01e6f-2080-5640-abb3-1e3d75e1ff5f/scratchpad/src/src/doe/rtl/doe_fsm.sv	2026-07-26 17:40:16.000000000 +0000
+@@ -123,7 +123,7 @@
+     else if (zeroize) begin
+         zeroize_reg <= 1;
+     end
+-    else if (running_uds || running_fe || running_hek) begin
++    else if ((running_uds || running_fe || running_hek) || (init_done && (kv_doe_fsm_ps != DOE_IDLE))) begin
+         zeroize_reg <= 0;
+     end
+ end
+@@ -265,7 +265,7 @@
+ //drive outputs to kv
+ always_comb kv_write.write_en = dest_write_en;
+ always_comb kv_write.write_offset = dest_write_offset;
+-always_comb kv_write.write_dest_valid = running_hek ? OCP_LOCK_HEK_SEED_DEST_VALID : 'd3; //FIXME tie off dest valid, or let FW program? 
++always_comb kv_write.write_dest_valid = running_hek ? OCP_LOCK_HEK_SEED_DEST_VALID : (running_uds ? 9'h023 : 'd3); //FIXME tie off dest valid, or let FW program? 
+ always_comb kv_write.write_entry = dest_addr;
+ //swizzle big endian result to little endian storage
+ always_comb kv_write.write_data = dest_write_en ? dest_data[(DEST_NUM_DWORDS-1) - dest_write_offset[DEST_OFFSET_W-1:0]] : '0;

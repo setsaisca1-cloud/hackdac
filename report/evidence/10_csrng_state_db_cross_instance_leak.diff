@@ -1,0 +1,26 @@
+--- /tmp/ct_v2.1.2/src/csrng/rtl/csrng_state_db.sv	2026-07-27 22:01:25.780914514 +0000
++++ /tmp/claude-0/-home-user-hackdac/2fd01e6f-2080-5640-abb3-1e3d75e1ff5f/scratchpad/src/src/csrng/rtl/csrng_state_db.sv	2026-07-26 17:40:13.000000000 +0000
+@@ -69,6 +69,7 @@
+   logic                            instance_status;
+   logic [NApps-1:0]                int_st_out_sel;
+   logic [NApps-1:0]                int_st_dump_sel;
++  logic [NApps-1:0]                int_st_dump_qualified;
+   logic [InternalStateWidth-1:0]   internal_states_out[NApps];
+   logic [InternalStateWidth-1:0]   internal_states_dump[NApps];
+   logic [InternalStateWidth-1:0]   internal_state_pl;
+@@ -111,12 +112,13 @@
+   //--------------------------------------------
+   // internal state read logic
+   //--------------------------------------------
++  assign int_st_dump_qualified = int_st_dump_sel & {NApps{int_state_read_enable_i[0]}};
++
+   for (genvar rd = 0; rd < NApps; rd = rd+1) begin : gen_state_rd
+     assign int_st_out_sel[rd] = (state_db_rd_inst_id_i == rd);
+     assign int_st_dump_sel[rd] = (int_st_dump_id_q == rd);
+     assign internal_states_out[rd] = int_st_out_sel[rd] ? internal_states_q[rd] : '0;
+-    assign internal_states_dump[rd] =
+-        int_st_dump_sel[rd] && int_state_read_enable_i[rd] ? internal_states_q[rd] : '0;
++    assign internal_states_dump[rd] = int_st_dump_qualified[rd] ? internal_states_q[rd] : '0;
+   end
+ 
+   // since only one of the internal states is active at a time, a

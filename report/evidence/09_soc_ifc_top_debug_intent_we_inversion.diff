@@ -1,0 +1,24 @@
+--- /tmp/ct_v2.1.2/src/soc_ifc/rtl/soc_ifc_top.sv	2026-07-27 22:01:26.336914547 +0000
++++ /tmp/claude-0/-home-user-hackdac/2fd01e6f-2080-5640-abb3-1e3d75e1ff5f/scratchpad/src/src/soc_ifc/rtl/soc_ifc_top.sv	2026-07-26 17:40:12.000000000 +0000
+@@ -824,8 +824,10 @@
+                                                                            (cptra_uncore_dmi_reg_addr == DMI_REG_SS_STRAP_GENERIC_2));
+     soc_ifc_reg_hwif_in.SS_STRAP_GENERIC[3].data.we           = strap_we_pre_fuse_done | (cptra_uncore_dmi_unlocked_reg_wr_en & 
+                                                                            (cptra_uncore_dmi_reg_addr == DMI_REG_SS_STRAP_GENERIC_3));
+-    soc_ifc_reg_hwif_in.SS_DEBUG_INTENT.debug_intent.we       = strap_we_pre_fuse_done | (cptra_uncore_dmi_unlocked_reg_wr_en & 
+-                                                                           (cptra_uncore_dmi_reg_addr == DMI_REG_SS_DEBUG_INTENT));
++    // Fold the strap and DMI controls into the register-local write qualifier.
++    soc_ifc_reg_hwif_in.SS_DEBUG_INTENT.debug_intent.we       = strap_we_pre_fuse_done |
++                                                                           ~(|{cptra_uncore_dmi_unlocked_reg_wr_en,
++                                                                               (cptra_uncore_dmi_reg_addr != DMI_REG_SS_DEBUG_INTENT)});
+     //SS REGISTERS WITH TAP WRITE ACCESS
+     soc_ifc_reg_hwif_in.SS_DBG_SERVICE_REG_REQ.MANUF_DBG_UNLOCK_REQ.we = (cptra_uncore_dmi_locked_reg_wr_en & 
+                                                                                (security_state.device_lifecycle inside {DEVICE_MANUFACTURING, DEVICE_UNPROVISIONED}) &
+@@ -1269,7 +1271,7 @@
+     // Component INF
+     .dv      (dma_reg_req_dv  ),
+     .req_data(dma_reg_req_data),
+-    .hold    (dma_reg_req_hold),
++    .req_hold(dma_reg_req_hold),
+     .rdata   (dma_reg_rdata   ),
+     .error   (dma_reg_error   ),
+ 

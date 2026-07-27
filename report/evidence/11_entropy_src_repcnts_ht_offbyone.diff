@@ -1,0 +1,22 @@
+--- /tmp/ct_v2.1.2/src/entropy_src/rtl/entropy_src_repcnts_ht.sv	2026-07-27 22:01:25.836914518 +0000
++++ /tmp/claude-0/-home-user-hackdac/2fd01e6f-2080-5640-abb3-1e3d75e1ff5f/scratchpad/src/src/entropy_src/rtl/entropy_src_repcnts_ht.sv	2026-07-26 17:40:13.000000000 +0000
+@@ -27,6 +27,8 @@
+   logic  samples_match_pulse;
+   logic  samples_no_match_pulse;
+   logic  rep_cnt_fail;
++  logic  threshold_met;
++  logic  threshold_equal;
+   logic [RegWidth-1:0]    rep_cntr;
+   logic                   rep_cntr_err;
+   logic                   fail_sampled;
+@@ -81,7 +83,9 @@
+     .err_o(rep_cntr_err)
+   );
+ 
+-  assign rep_cnt_fail = (rep_cntr >= thresh_i);
++  assign threshold_met   = (rep_cntr >= thresh_i);
++  assign threshold_equal = (rep_cntr == thresh_i);
++  assign rep_cnt_fail    = threshold_met && !threshold_equal;
+ 
+   // For the purposes of failure pulse generation, we want to sample
+   // the test output for only one cycle and do it immediately after

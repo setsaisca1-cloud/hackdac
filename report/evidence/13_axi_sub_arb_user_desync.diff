@@ -1,0 +1,25 @@
+--- /tmp/ct_v2.1.2/src/axi/rtl/axi_sub_arb.sv	2026-07-27 22:01:25.764914513 +0000
++++ /tmp/claude-0/-home-user-hackdac/2fd01e6f-2080-5640-abb3-1e3d75e1ff5f/scratchpad/src/src/axi/rtl/axi_sub_arb.sv	2026-07-26 17:40:16.000000000 +0000
+@@ -84,6 +84,7 @@
+ 
+     logic r_pri; // Priority to reads
+     logic r_win;
++    logic user_from_read;
+ 
+     // Switch priority to current arb winner so that priority persists
+     // in case
+@@ -121,11 +122,13 @@
+         else       r_win = r_dv && !w_dv;
+     end
+ 
++    assign user_from_read = ~(~r_win | w_dv);
++
+     always_comb begin
+         dv      = r_dv || w_dv;
+         addr    = r_win ? r_addr : w_addr;
+         write   = r_win ?      0 :      1;
+-        user    = r_win ? r_user : w_user;
++        user    = user_from_read ? r_user : w_user;
+         id      = r_win ? r_id   : w_id  ;
+         last    = r_win ? r_last : w_last;
+         size    = r_win ? r_size : w_size;

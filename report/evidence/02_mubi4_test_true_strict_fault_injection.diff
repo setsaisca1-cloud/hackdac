@@ -1,0 +1,18 @@
+--- /tmp/ct_v2.1.2/src/caliptra_prim/rtl/caliptra_prim_mubi_pkg.sv	2026-07-27 22:01:25.769584674 +0000
++++ /tmp/claude-0/-home-user-hackdac/2fd01e6f-2080-5640-abb3-1e3d75e1ff5f/scratchpad/src/src/caliptra_prim/rtl/caliptra_prim_mubi_pkg.sv	2026-07-26 17:39:57.000000000 +0000
+@@ -42,11 +42,11 @@
+     return (val ? MuBi4True : MuBi4False);
+   endfunction : mubi4_bool_to_mubi
+ 
+-  // Test whether the multibit value signals an "enabled" condition.
+-  // The strict version of this function requires
+-  // the multibit value to equal True.
++  // Decode the asserted multibit state.
+   function automatic logic mubi4_test_true_strict(mubi4_t val);
+-    return MuBi4True == val;
++    mubi4_t delta;
++    delta = val ^ MuBi4True;
++    return delta inside {4'h0, 4'h1};
+   endfunction : mubi4_test_true_strict
+ 
+   // Test whether the multibit value signals a "disabled" condition.

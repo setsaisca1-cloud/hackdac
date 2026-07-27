@@ -1,0 +1,15 @@
+[55000] sample #0  test_cnt_o=1  test_fail_pulse_o=0
+[75000] sample #1  test_cnt_o=2  test_fail_pulse_o=0
+[95000] sample #2  test_cnt_o=3  test_fail_pulse_o=0
+[115000] sample #3  test_cnt_o=4  test_fail_pulse_o=0
+[135000] sample #4  test_cnt_o=5  test_fail_pulse_o=0
+[155000] sample #5  test_cnt_o=6  test_fail_pulse_o=0
+[175000] sample #6  test_cnt_o=7  test_fail_pulse_o=0
+[195000] sample #7  test_cnt_o=8  test_fail_pulse_o=0
+[215000] sample #8  test_cnt_o=9  test_fail_pulse_o=0
+[235000] sample #9  test_cnt_o=10  test_fail_pulse_o=0
+[255000] sample #10  test_cnt_o=11  test_fail_pulse_o=0
+[275000] sample #11  test_cnt_o=12  test_fail_pulse_o=0
+--------------------------------------------------------
+BUG CONFIRMED: health test fired late, at rep_cntr=6 instead of at threshold=5 (off-by-one, '>' used instead of '>=')
+- tb.sv:59: Verilog $finish

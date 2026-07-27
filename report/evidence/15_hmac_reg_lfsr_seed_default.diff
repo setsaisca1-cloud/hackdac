@@ -1,0 +1,11 @@
+--- /tmp/ct_v2.1.2/src/hmac/rtl/hmac_reg.sv	2026-07-27 22:01:25.841300584 +0000
++++ /tmp/claude-0/-home-user-hackdac/2fd01e6f-2080-5640-abb3-1e3d75e1ff5f/scratchpad/src/src/hmac/rtl/hmac_reg.sv	2026-07-26 17:39:57.000000000 +0000
+@@ -985,7 +985,7 @@
+         end
+         always_ff @(posedge clk or negedge hwif_in.reset_b) begin
+             if(~hwif_in.reset_b) begin
+-                field_storage.HMAC512_LFSR_SEED[i0].LFSR_SEED.value <= 32'h3cabffb0;
++                field_storage.HMAC512_LFSR_SEED[i0].LFSR_SEED.value <= 32'h0;
+             end else if(field_combo.HMAC512_LFSR_SEED[i0].LFSR_SEED.load_next) begin
+                 field_storage.HMAC512_LFSR_SEED[i0].LFSR_SEED.value <= field_combo.HMAC512_LFSR_SEED[i0].LFSR_SEED.next;
+             end
