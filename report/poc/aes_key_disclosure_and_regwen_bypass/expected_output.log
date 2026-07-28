@@ -1,0 +1,9 @@
+addr_hit[1]=0 (idle): reg_rdata_next = 0x00000000
+addr_hit[1]=1 (SW reads AES_KEY_SHARE0[0]): reg_rdata_next = 0xcafef00d  (loaded key word = 0xcafef00d)
+BUG 1 CONFIRMED: the read-data mux returns the raw stored key word instead of the hardwired 0 upstream uses for this write-only register.
+--------------------------------------------------------------
+REGWEN locked (ctrl_aux_regwen_qs=0), write attempted (ctrl_aux_shadowed_we=1):
+  correct (upstream) gated_we = 0  (write should be BLOCKED)
+  actual  (patched)  gated_we = 1
+BUG 2 CONFIRMED: the patched gate gives write-enable=1 even though REGWEN says the register is locked.
+- tb.sv:76: Verilog $finish

@@ -1,0 +1,3 @@
+dv=1 write=0 addr=0x12345678  user=0xffffffff  (r_user=0x000000aa w_user=0xffffffff)
+BUG CONFIRMED: transaction is a READ of addr=0x12345678 (write=0, addr==r_addr) but user=0xffffffff == the WRITE request's user id, not the read requester's own id (0x000000aa)
+- tb.sv:76: Verilog $finish

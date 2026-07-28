@@ -1,0 +1,15 @@
+=== Build 1: as-shipped (assertion removed) ===
+Simulating a glitch on key_reg while the engine is busy (core_busy=1)...
+key_reg after glitch = 0xffffffff -- simulation reached this line without stopping.
+BUG 17 CONFIRMED: built exactly as shipped (assertion removed) -- the glitch on a
+key register during a busy window went completely undetected by the DV environment.
+Re-run with -DWITH_ASSERTION -DCLP_ASSERT_ON to see the same glitch caught immediately.
+- tb.sv:56: Verilog $finish
+
+=== Build 2: with the upstream CALIPTRA_ASSERT_STABLE restored ===
+Simulating a glitch on key_reg while the engine is busy (core_busy=1)...
+[45000] %Fatal: tb.sv:26: Assertion failed in TOP.tb.u_dut.ERR_KEY_NOT_STABLE: [CALIPTRA_ASSERT FAILED] [TOP.tb.u_dut.ERR_KEY_NOT_STABLE] ERR_KEY_NOT_STABLE (tb.sv:26)
+%Error: tb.sv:26: Verilog $stop
+Aborting...
+/bin/bash: line 48: 28606 Aborted                 ./obj_dir2/tb_sim_withassert
+(non-zero exit above is expected -- the assertion correctly aborted the sim)

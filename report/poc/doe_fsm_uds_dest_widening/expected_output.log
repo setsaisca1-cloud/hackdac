@@ -1,0 +1,8 @@
+Non-UDS derivation (e.g. Field Entropy)  -> write_dest_valid = 9'b000000011 (0x3)
+UDS derivation                            -> write_dest_valid = 9'b000100011 (0x23)
+--------------------------------------------------------------
+BUG CONFIRMED: the UDS-derived key's Key-Vault destination-valid mask sets bit 5 (KV_DEST_IDX_AES_KEY)
+which the non-UDS derivation path does NOT set. The AES engine's Key-Vault read port
+gains direct access to the Unique Device Secret-derived key that was not granted to it
+for other, structurally-identical derivations.
+- tb.sv:51: Verilog $finish

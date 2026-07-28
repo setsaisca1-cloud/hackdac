@@ -1,0 +1,7 @@
+[Sanity: DMA-only read of release slot] DUT=1 golden=1  (match)
+[Sanity: HMAC-only read of release slot] DUT=0 golden=0  (match)
+[BUG: concurrent DMA+HMAC read of release slot (mixed one-hot mask)] DUT=1 golden=0  <== SECURITY BYPASS: DUT allows a read the spec forbids
+[BUG: concurrent DMA+ECC_SEED read of release slot (mixed one-hot mask)] DUT=1 golden=0  <== SECURITY BYPASS: DUT allows a read the spec forbids
+--------------------------------------------------------------
+Total DUT-vs-spec mismatches: 2  (of which security bypasses: 2)
+- tb.sv:108: Verilog $finish

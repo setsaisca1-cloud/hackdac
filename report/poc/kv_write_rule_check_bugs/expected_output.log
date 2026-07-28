@@ -1,0 +1,18 @@
+[BUG 1A: HMAC(non-AES) KV-forwarded write, LOCK-region source, to release slot] DUT=1 golden=0  <== SECURITY BYPASS: DUT allows a write the spec forbids
+[Sanity: HMAC(non-AES) RAW write to release slot (kv_data0_present=0)] DUT=0 golden=0  (match)
+[BUG 1C sweep: STD-region source(0) -> dst=13] DUT=1 golden=1  (match)
+[BUG 1C sweep: STD-region source(0) -> dst=14] DUT=1 golden=1  (match)
+[BUG 1C sweep: STD-region source(0) -> dst=15] DUT=0 golden=1  <== DUT over-blocks vs spec (availability bug, not a bypass)
+[BUG 1C sweep: STD-region source(0) -> dst=16] DUT=0 golden=0  (match)
+[BUG 1C sweep: STD-region source(0) -> dst=17] DUT=0 golden=0  (match)
+[BUG 1C sweep: STD-region source(0) -> dst=18] DUT=0 golden=0  (match)
+[BUG 1C sweep: LOCK-region source(16) -> dst=13] DUT=0 golden=0  (match)
+[BUG 1C sweep: LOCK-region source(16) -> dst=14] DUT=0 golden=0  (match)
+[BUG 1C sweep: LOCK-region source(16) -> dst=15] DUT=0 golden=0  (match)
+[BUG 1C sweep: LOCK-region source(16) -> dst=16] DUT=1 golden=1  (match)
+[BUG 1C sweep: LOCK-region source(16) -> dst=17] DUT=1 golden=1  (match)
+[BUG 1C sweep: LOCK-region source(16) -> dst=18] DUT=1 golden=1  (match)
+[BUG 1C sweep: dual-source (STD+LOCK) -> dst=15 boundary] DUT=0 golden=0  (match)
+--------------------------------------------------------------
+Total DUT-vs-spec mismatches: 2  (of which security bypasses: 1)
+- tb.sv:151: Verilog $finish

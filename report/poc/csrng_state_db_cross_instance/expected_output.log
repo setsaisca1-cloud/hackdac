@@ -1,0 +1,6 @@
+int_state_read_enable_i = 0001 (app0=1, app2=0)
+selected dump target app index = 2
+internal_states_dump[2] = 0x1deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef
+internal_states_q[2] (app 2's real secret state) = 0x1deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef
+BUG CONFIRMED: application 2's internal DRBG state is exposed via internal_states_dump even though int_state_read_enable_i[2]==0 -- only app 0's own enable bit (int_state_read_enable_i[0]) was set.
+- tb.sv:101: Verilog $finish

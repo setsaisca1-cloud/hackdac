@@ -1,0 +1,19 @@
+HMAC512_LFSR_SEED[0].LFSR_SEED (post-reset, before any SW write) = 0x00000000
+HMAC512_LFSR_SEED[1].LFSR_SEED (post-reset, before any SW write) = 0x00000000
+HMAC512_LFSR_SEED[2].LFSR_SEED (post-reset, before any SW write) = 0x00000000
+HMAC512_LFSR_SEED[3].LFSR_SEED (post-reset, before any SW write) = 0x00000000
+HMAC512_LFSR_SEED[4].LFSR_SEED (post-reset, before any SW write) = 0x00000000
+HMAC512_LFSR_SEED[5].LFSR_SEED (post-reset, before any SW write) = 0x00000000
+HMAC512_LFSR_SEED[6].LFSR_SEED (post-reset, before any SW write) = 0x00000000
+HMAC512_LFSR_SEED[7].LFSR_SEED (post-reset, before any SW write) = 0x00000000
+HMAC512_LFSR_SEED[8].LFSR_SEED (post-reset, before any SW write) = 0x00000000
+HMAC512_LFSR_SEED[9].LFSR_SEED (post-reset, before any SW write) = 0x00000000
+HMAC512_LFSR_SEED[10].LFSR_SEED (post-reset, before any SW write) = 0x00000000
+HMAC512_LFSR_SEED[11].LFSR_SEED (post-reset, before any SW write) = 0x00000000
+--------------------------------------------------------------
+BUG CONFIRMED: all 12 HMAC512_LFSR_SEED words reset to 0x00000000 instead of the
+expected nonzero default 0x3cabffb0. Any masking LFSR seeded from this register
+starts in the degenerate all-zero state (no mask randomness) until firmware
+explicitly writes a nonzero seed -- any HMAC operation performed before that first
+SW reseed runs with a predictable/absent SCA mask.
+- tb.sv:61: Verilog $finish

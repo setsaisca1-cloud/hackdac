@@ -1,0 +1,39 @@
+Internal digest_reg right after Scenario A's hash op (probed directly, pre-register-file): 0xe3c455e4cad114dee4a1b29a5586a78c3deba0578109660de66bb722b773265e
+Scenario A (debug LOCKED, D=0): SHA256_DIGEST readback:
+  DIGEST[0] = 0x00000000
+  DIGEST[1] = 0x00000000
+  DIGEST[2] = 0x00000000
+  DIGEST[3] = 0x00000000
+  DIGEST[4] = 0x00000000
+  DIGEST[5] = 0x00000000
+  DIGEST[6] = 0x00000000
+  DIGEST[7] = 0x00000000
+  -> digest reads back as ALL-ZERO (hwclr permanently asserted)
+Scenario B (debug OPEN, D=1): SHA256_DIGEST readback:
+  DIGEST[0] = 0x00000000
+  DIGEST[1] = 0x00000000
+  DIGEST[2] = 0x00000000
+  DIGEST[3] = 0x00000000
+  DIGEST[4] = 0x00000000
+  DIGEST[5] = 0x00000000
+  DIGEST[6] = 0x00000000
+  DIGEST[7] = 0x00000000
+  ->    digest is zero even with debug open
+After closing debug session (D back to 0), same digest re-read:
+  DIGEST[0] = 0x00000000
+  DIGEST[1] = 0x00000000
+  DIGEST[2] = 0x00000000
+  DIGEST[3] = 0x00000000
+  DIGEST[4] = 0x00000000
+  DIGEST[5] = 0x00000000
+  DIGEST[6] = 0x00000000
+  DIGEST[7] = 0x00000000
+--------------------------------------------------------------
+BUG CONFIRMED: SHA256_DIGEST reads back as all-zero in BOTH scenarios, even though
+the core's internal digest_reg holds a real, nonzero computed digest. The DIGEST.hwclr
+polarity bug (zeroize_reg2 = Z | ~D instead of Z | D) permanently hardware-clears the
+software-visible register whenever debug is locked (D=0, the normal/production case),
+while a debug session (D=1) separately holds the whole core in reset via the still-
+correct zeroize_reg. Net result: the digest read-back path is completely non-functional
+in every reachable state -- a permanent denial-of-service of SHA256_DIGEST readback.
+- tb.sv:134: Verilog $finish

@@ -1,0 +1,8 @@
+Before zeroize: lfsr_seed_reg=0xdeadbeef lambda_reg=0x11111111
+After zeroize:  lfsr_seed_reg=0xdeadbeef lambda_reg=0x00000000
+--------------------------------------------------------------
+BUG CONFIRMED: lambda_reg (and scalar_rnd_reg/masking_rnd_reg/drbg_reg, same pattern)
+were correctly cleared by zeroize, but lfsr_seed_reg -- the SCA masking-LFSR seed --
+retained its pre-zeroize value 0xdeadbeef. Masking randomness state survives across the
+zeroize boundary that is supposed to scrub it between ECDSA operations.
+- tb.sv:99: Verilog $finish

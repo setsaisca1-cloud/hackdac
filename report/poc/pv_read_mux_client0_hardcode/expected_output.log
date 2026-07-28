@@ -1,0 +1,10 @@
+=== NUM_READ=1 (current shipped config) ===
+[NUM_READ=1, matches this drop's shipped pv_defines_pkg.sv] client 0 requests PCR entry 3 -> pv_rd_resp[0].read_data = 0xa0000030 (expected 0xa0000030)
+STATUS: with only one read client wired up, pv_read[0]==pv_read[client] trivially -- the hardcoded index is DORMANT / not exploitable in this configuration.
+- tb.sv:85: Verilog $finish
+=== NUM_READ=2 (upstream default / latent) ===
+[NUM_READ=2, matching upstream v2.1.2's own default] client 0 requested entry 3, client 1 requested entry 1
+  pv_rd_resp[0].read_data = 0xa0000030 (expected own entry 3 = 0xa0000030)
+  pv_rd_resp[1].read_data = 0xa0000030 (expected own entry 1 = 0xa0000010, but got client 0's entry instead?)
+BUG CONFIRMED (latent): client 1 receives client 0's PCR entry instead of its own -- this is exactly what would happen if a second PCR read client were wired up.
+- tb.sv:85: Verilog $finish

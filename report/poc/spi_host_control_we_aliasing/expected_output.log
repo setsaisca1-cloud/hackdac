@@ -1,0 +1,8 @@
+CONTROL after legitimate write (0x8000_1122): 0x80001122
+CONTROL after writing STATUS (0x14) with 0x4000_0000: 0x40000000
+--------------------------------------------------------------
+BUG CONFIRMED: writing the read-only STATUS register changed CONTROL
+  CONTROL before: 0x80001122  (SPIEN=1 SW_RST=0)
+  CONTROL after : 0x40000000  (SPIEN=0 SW_RST=1)
+  A write aimed at STATUS silently disabled SPIEN and/or asserted SW_RST on CONTROL.
+- tb.sv:95: Verilog $finish

@@ -1,0 +1,13 @@
+ dmi_unlocked | addr==target | we_correct | we_buggy
+      0       |      0       |      0     |     0               
+      0       |      1       |      0     |     1   <== MISMATCH
+      1       |      0       |      0     |     0               
+      1       |      1       |      1     |     0   <== MISMATCH
+--------------------------------------------------------------
+BUG CONFIRMED: with the DMI still LOCKED (dmi_unlocked_reg_wr_en=0) and the TAP
+addressing SS_DEBUG_INTENT, the patched expression asserts we=1 (write succeeds)
+while the correct/upstream expression asserts we=0 (write should be blocked).
+An unauthenticated party on the DMI/JTAG TAP can set the debug-intent strap
+without ever completing the DMI unlock/authentication sequence.
+Total mismatched cases out of 4 exhaustive combinations: 2
+- tb.sv:70: Verilog $finish
